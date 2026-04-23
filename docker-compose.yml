@@ -10,13 +10,15 @@ services:
     ports:
       - "8000:80"
     environment:
+      - APP_KEY=${APP_KEY}
+      - APP_ENV=local
+      - APP_DEBUG=true
       - DB_CONNECTION=pgsql
       - DB_HOST=postgres
       - DB_PORT=5432
       - DB_DATABASE=lara23
       - DB_USERNAME=postgres
       - DB_PASSWORD=secret
-      - APP_DEBUG=true
     depends_on:
       postgres:
         condition: service_healthy
