@@ -1,6 +1,7 @@
 services:
   - type: web
     name: lara23-app
+    plan: free
     runtime: docker
     dockerfilePath: ./Dockerfile
     envVars:
