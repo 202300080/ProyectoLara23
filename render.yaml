@@ -49,5 +49,5 @@ services:
 databases:
   - name: lara23-db
     databaseName: lara23
-    user: postgres
+    user: lara23_user
     plan: free
