@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y \
     dos2unix \
     libpq-dev \
     postgresql-client \
-    && docker-php-ext-install pdo pdo_pgsql bcmath \
+    default-mysql-client \
+    && docker-php-ext-install pdo pdo_pgsql pdo_mysql bcmath \
     && a2enmod rewrite headers \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 

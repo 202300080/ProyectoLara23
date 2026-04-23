@@ -13,32 +13,32 @@ services:
       - APP_KEY=${APP_KEY}
       - APP_ENV=local
       - APP_DEBUG=true
-      - DB_CONNECTION=pgsql
-      - DB_HOST=postgres
-      - DB_PORT=5432
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
       - DB_DATABASE=lara23
-      - DB_USERNAME=postgres
+      - DB_USERNAME=root
       - DB_PASSWORD=secret
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
     networks:
       - lara23_network
     restart: unless-stopped
 
-  postgres:
-    image: postgres:16
-    container_name: lara23_postgres
+  mysql:
+    image: mysql:8.0
+    container_name: lara23_mysql
     environment:
-      POSTGRES_DB: lara23
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: lara23
+      MYSQL_ROOT_HOST: '%'
     ports:
-      - "5432:5432"
+      - "3307:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-psecret"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -46,22 +46,24 @@ services:
       - lara23_network
     restart: unless-stopped
 
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: lara23_pgadmin
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: lara23_phpmyadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: secret
     ports:
-      - "5050:80"
+      - "8888:80"
     depends_on:
-      - postgres
+      - mysql
     networks:
       - lara23_network
     restart: unless-stopped
 
 volumes:
-  postgres_data:
+  mysql_data:
 
 networks:
   lara23_network:
